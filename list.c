@@ -2,6 +2,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+size_t list_size(list_t *l)
+{
+    size_t size = 0;
+    list_item_t *cur = l->head;
+    while (cur) {
+        size++;
+        cur = cur->next;
+    }
+    return size;
+}
+
 void list_insert_before(list_t *l,
                                       list_item_t *before,
                                       list_item_t *item)

@@ -71,8 +71,8 @@ static char *test_list(void)
     // Test sorting the list
     merge_sort(&l);
     my_assert(list_size(&l) == N, "list size should be N");
-    list_item_t *cur = l.head;
-    size_t k = 0;
+    cur = l.head;
+    k = 0;
     while (cur) {
         my_assert(cur->value == k, "Unexpected list item value");
         k++;
