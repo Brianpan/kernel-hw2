@@ -8,9 +8,6 @@ typedef struct {
     struct list_item *head;
 } list_t;
 
-size_t list_size(list_t *l);
-
-
  void list_insert_before(list_t *l,
                                       list_item_t *before,
                                       list_item_t *item);
