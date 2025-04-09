@@ -1,7 +1,8 @@
 #include "list.h"
 #include <stdint.h>
+#include <stdlib.h>
 
-static inline void list_insert_before(list_t *l,
+void list_insert_before(list_t *l,
                                       list_item_t *before,
                                       list_item_t *item)
 {
@@ -12,7 +13,24 @@ static inline void list_insert_before(list_t *l,
     item->next = before;
 }
 
-static void merge_sort(list_t *l)
+void merge_two_list(struct list_item *l1, struct list_item *l2)
+{
+    struct list_item *head = NULL, **ptr = &head, **node;
+    struct list_item *l1_node = l1->next,
+                     *l2_node = l2->next;
+    for (node = NULL; l1_node && l2_node; *node = (*node)->next) {
+        node = l1_node->value < l2_node->value ? &l1_node : &l2_node;
+        // next ptr to node
+        *ptr = *node;
+        // move to next ptr
+        ptr = &(*ptr)->next;
+    }
+    *ptr = (struct list_item *)((uintptr_t) l1_node | (uintptr_t) l2_node);
+
+    l1 = head;
+}
+
+void merge_sort(list_t *l)
 {
     if (l == NULL || l->head == NULL || l->head->next == NULL)
         return;
@@ -33,22 +51,5 @@ static void merge_sort(list_t *l)
     merge_sort(m_list);
 
     // merge the two lists
-    merge_two_list(l, m_list);
-}
-
-void merge_two_list(list_t *l1, list_t *l2)
-{
-    struct list_item *head = NULL, **ptr = &head, **node;
-    struct list_item *l1_node =l1->head->next,
-                     *l2_node = l2->head->next;
-    for (node = NULL; l1_node && l2_node; *node = (*node)->next) {
-        node = l1_node->value < l2_node->value ? &l1_node : &l2_node;
-        // next ptr to node
-        *ptr = node;
-        // move to next ptr
-        ptr = &(*ptr)->next;
-    }
-    *ptr = (struct list_item *) ((uintptr_t) l1_node | (uintptr_t) l2_node);
-
-    l1->head = head;
+    merge_two_list(l->head, m_list->head);
 }
