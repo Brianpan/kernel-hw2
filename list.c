@@ -18,7 +18,7 @@ void list_insert_before(list_t *l,
                                       list_item_t *item)
 {
     list_item_t **p;
-    for (p = &l->head; *p != before || *p != NULL; p = &(*p)->next)
+    for (p = &l->head; *p != before && *p != NULL; p = &(*p)->next)
         ;
     *p = item;
     item->next = before;
