@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct block {
     size_t size;
@@ -30,11 +31,9 @@ block_t *find_predecessor_free_tree(block_t **root, block_t *node)
     block_t **node_ptr = root;
     block_t *pred = NULL;
     while (*node_ptr) {
-        if ((*node_ptr)->size > node->size) {
+        if (((*node_ptr)->size < node->size) && (!pred || ((*node_ptr)->size > pred->size && (*node_ptr)->size < node->size)))
             pred = *node_ptr;
-            node_ptr = &(*node_ptr)->r;
-        }
-            node_ptr = &(*node_ptr)->l;
+        node_ptr = (*node_ptr)->size >= node->size ? &(*node_ptr)->l : &(*node_ptr)->r;
     }
 
     return pred;
@@ -62,7 +61,7 @@ void remove_free_tree(block_t **root, block_t *target)
         /* Verify the found predecessor using a helper function (for debugging).
          */
         block_t *expected_pred = find_predecessor_free_tree(root, *node_ptr);
-        assert(expected_pred == *pred_ptr);
+	    assert(expected_pred == *pred_ptr);
 
         /* If the predecessor is the immediate left child. */
         if (*pred_ptr == (*node_ptr)->l) {
@@ -100,25 +99,64 @@ void remove_free_tree(block_t **root, block_t *target)
     target->r = NULL;
 }
 
-int main(void)
+block_t* create_block(size_t size)
 {
-    // Example usage of the functions
-    block_t *target = malloc(sizeof(block_t));
-    target->size = 10;
-    target->l = NULL;
-    target->r = NULL;
-    block_t *root = &target;
+    block_t *block = malloc(sizeof(block_t));
+    if (!block) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    block->size = size;
+    block->l = NULL;
+    block->r = NULL;
+    return block;
+}
+
+// naive implementation without tree balancing
+void insert_free_tree(block_t **root, size_t size)
+{
+    block_t *new_block = create_block(size);
+    assert(new_block != NULL);
+    block_t **node_ptr = root;
+    while (*node_ptr) {
+        if (size < (*node_ptr)->size)
+            node_ptr = &(*node_ptr)->l;
+        else
+            node_ptr = &(*node_ptr)->r;    
+    }
+    *node_ptr = new_block;
+}
+
+void test0()
+{
+    // insert the tree to the root
+    block_t **root;
+    root = malloc(sizeof(block_t*));
+    //** // tree is 
+    ////  10
+    ////   
+    //// 5    15
+    ///      
+    // 2   7 12 20 
+    //
+    insert_free_tree(root, 10);
+    insert_free_tree(root, 5);
+    insert_free_tree(root, 15);
+    insert_free_tree(root, 2);
+    insert_free_tree(root, 7);
+    insert_free_tree(root, 12);
+    insert_free_tree(root, 20);
+
+    block_t *target = create_block(10);
+    remove_free_tree(root, target);
+    // check the tree
+    assert((*root)->size == 7);
     
 
-    block_t **node_ptr = find_free_tree(&root, target);
-    if (node_ptr) {
-        printf("Found node with size: %zu\n", (*node_ptr)->size);
-    } else {
-        printf("Node not found.\n");
-    }
-
-    remove_free_tree(&root, target);
-    free(target);
+}
+int main(void)
+{
+    test0();
 
     return 0;
 }
