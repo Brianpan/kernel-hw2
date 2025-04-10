@@ -6,3 +6,5 @@ q1: q1.o list.o
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<  
 
+q2: q2.o
+	$(CC) $(CFLAGS) -o $@ $^
