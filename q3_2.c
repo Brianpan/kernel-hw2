@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "list2.h"
 
 typedef struct __node {
@@ -52,9 +53,8 @@ void shuffle(int *arr, size_t n)
 }
 
 // accessory functions
-struct list_head* list_tail(struct list_head *list)
+struct list_head* list_tail(struct list_head *tail)
 {
-    struct list_head *tail = list->next;
     while (tail && tail->next)
         tail = tail->next;
     return tail;
@@ -111,9 +111,14 @@ void quick_sort(struct list_head *list)
             while (p) {
                 struct list_head *n = p;
                 p = p->next;
-                p->prev = NULL;
-                n->next = NULL;
-                list_add(n, list_entry(n, node_t, list)->value > value ? &right : &left);
+                int n_value = list_entry(n, node_t, list)->value;
+                if (n_value > value) {
+                    n->next = right;
+                    right = n;
+                } else {
+                    n->next = left;
+                    left = n;
+                }
             }
 
             begin[i] = left;
@@ -128,9 +133,9 @@ void quick_sort(struct list_head *list)
             }
             i--;
         }
-        list->next = result;
-        rebuild_list_link(list);
     }
+    list->next = result;
+    rebuild_list_link(list);
 }
 
 int main(int argc, char **argv)
