@@ -17,8 +17,8 @@ node_t *list_tail(node_t **list)
 
 void list_add(node_t **list, node_t *new_node)
 {
+    if (list == NULL || new_node == NULL) return;
     if (!*list) {
-        list = malloc(sizeof(node_t *)); 
         *list = new_node;
         new_node->next = NULL;
     } else {
@@ -86,7 +86,7 @@ int check_sort(node_t **list)
 {
     node_t *cur = *list;
     while (cur && cur->next) {
-        if (cur->value > cur->next->value)
+        if (cur->value < cur->next->value)
             return 0;
         cur = cur->next;
 
@@ -95,7 +95,7 @@ int check_sort(node_t **list)
 }
 
 int main() {
-    node_t *list = NULL;
+    node_t **list = malloc(sizeof(node_t *));
     node_t *node1 = malloc(sizeof(node_t));
     node1->value = 3;
     node_t *node2 = malloc(sizeof(node_t));
@@ -103,13 +103,13 @@ int main() {
     node_t *node3 = malloc(sizeof(node_t));
     node3->value = 2;
 
-    list_add(&list, node1);
-    list_add(&list, node2);
-    list_add(&list, node3);
+    list_add(list, node1);
+    list_add(list, node2);
+    list_add(list, node3);
 
-    quick_sort(&list);
+    quick_sort(list);
 
-    if (check_sort(&list))
+    if (check_sort(list))
         printf("List is sorted\n");
     else
         printf("List is not sorted\n");
