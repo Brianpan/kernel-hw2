@@ -8,3 +8,6 @@ q1: q1.o list.o
 
 q2: q2.o
 	$(CC) $(CFLAGS) -o $@ $^
+
+q3: q3.o
+	$(CC) $(CFLAGS) -o $@ $^
