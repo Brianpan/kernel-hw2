@@ -11,3 +11,6 @@ q2: q2.o
 
 q3: q3.o
 	$(CC) $(CFLAGS) -o $@ $^
+
+q3_2: q3_2.o
+	$(CC) $(CFLAGS) -o $@ $^
