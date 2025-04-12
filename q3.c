@@ -1,4 +1,5 @@
-#include <list2.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct __node {
     struct __node *left, *right;
@@ -17,6 +18,7 @@ node_t *list_tail(node_t **list)
 void list_add(node_t **list, node_t *new_node)
 {
     if (!*list) {
+        list = malloc(sizeof(node_t *)); 
         *list = new_node;
         new_node->next = NULL;
     } else {
@@ -24,6 +26,17 @@ void list_add(node_t **list, node_t *new_node)
         tail->next = new_node;
         new_node->next = NULL;
     }
+}
+
+int list_length(node_t **list)
+{
+    int count = 0;
+    node_t *cur = *list;
+    while (cur) {
+        count++;
+        cur = cur->next;
+    }
+    return count;
 }
 
 void quick_sort(node_t **list)
@@ -69,16 +82,16 @@ void quick_sort(node_t **list)
     *list = result;
 }
 
-bool check_sort(node_t **list)
+int check_sort(node_t **list)
 {
     node_t *cur = *list;
     while (cur && cur->next) {
         if (cur->value > cur->next->value)
-            return false;
-        curr = cur->next;
+            return 0;
+        cur = cur->next;
 
     }
-    return true;
+    return 1;
 }
 
 int main() {
