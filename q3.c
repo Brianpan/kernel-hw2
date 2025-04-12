@@ -65,11 +65,11 @@ void quick_sort(node_t **list)
             }
 
             begin[i] = left;
-            end[i] = right;
+            end[i] = list_tail(&left);
             begin[i + 1] = pivot;
             end[i + 1] = pivot;
             begin[i + 2] = right;
-            end[i + 2] = right;
+            end[i + 2] = list_tail(&right);
 
             left = right = NULL;
             i += 2;
