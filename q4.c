@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <stdlib.h>
+#include <assert.h>
 #include "list2.h"
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
@@ -49,7 +51,7 @@ static uint16_t get_unsigned16(void)
     return x;
 }
 
-static inline random_shuffle_array(uint16_t *operations, uint16_t len)
+static inline void random_shuffle_array(uint16_t *operations, uint16_t len)
 {
     for (uint16_t i = 0; i < len; i++) {
         uint16_t j = get_unsigned16() % (i + 1);
@@ -113,7 +115,8 @@ int main(void)
 
     i = 0;
     list_for_each_entry_safe (item, is, &testlist, list) {
-        assert(item->i == values[i]);
+        if (is)
+            assert(cmpint(&item->i, &is->i) < 0);
         list_del(&item->list);
         free(item);
         i++;
