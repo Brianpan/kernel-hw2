@@ -73,5 +73,5 @@ int main()
 
     uint64_t y = 1024;
     unsigned result64 = sqrti(y);
-    printf("Square root of %llu: %llu\n", y, result64);
+    printf("Square root of %lu: %u\n", y, result64);
 }
